@@ -1,50 +1,94 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
+require('dotenv').config();
+const mongoose = require('mongoose');
 const app = express();
 app.use(bodyParser.json());
 
-const contacts = [];
-
-app.get('/contacts', (req, res) => {
-  res.json(contacts);
+mongoose.connect(process.env.MONGODB_URI, { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true 
+})
+.then(() => {
+  console.log('Conectado ao MongoDB com sucesso!');
+})
+.catch(err => {
+  console.error('Erro ao conectar ao MongoDB:', err);
 });
 
-app.post('/contacts', (req, res) => {
-  const newContact = req.body;
-  const { id, name, email, phoneNumber } = newContact;
-
-  if (contacts.some((contact) => contact.id === newContact.id)) {
-    return res.status(400).send('Contato com esse ID já existe.');
-  } else if (!id || !name || !email || !phoneNumber) {
-    return res.status(400).send('Todos os parametros são obrigatórios.');
-  }
-
-  contacts.push(newContact);
-  res.status(201).json({ message: `Criado com sucesso!`, contact: newContact });
+const contactSchema = new mongoose.Schema({
+  id: { type: Number, required: true, unique: true },
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  phoneNumber: { type: String, required: true },
 });
 
-app.put('/contacts/:id', (req, res) => {
-  const { id } = req.params;
-  const updatedContact = req.body;
+const Contact = mongoose.model('Contact', contactSchema);
 
-  const index = contacts.findIndex((contact) => contact.id === id);
-  if (index !== -1) {
-    contacts[index] = updatedContact;
-    res.json(updatedContact);
-  } else {
-    res.status(404).send('Contato não encontrado');
+app.get('/contacts', async (req, res) => {
+  try {
+    const contacts = await Contact.find();
+    res.json(contacts);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar contatos' });
   }
 });
 
-app.delete('/contacts/:id', (req, res) => {
+app.post('/contacts', async (req, res) => {
+  const { id, name, email, phoneNumber } = req.body;
+
+  if (!id || !name || !email || !phoneNumber) {
+    return res.status(400).send('Todos os parâmetros são obrigatórios.');
+  }
+
+  const newContact = new Contact({ id, name, email, phoneNumber });
+
+  try {
+    await newContact.save();
+    res.status(201).json({ message: 'Criado com sucesso!', contact: newContact });
+  } catch (error) {
+    if (error.code === 11000) {
+      res.status(400).send('Contato com esse ID já existe.');
+    } else {
+      res.status(500).json({ error: 'Erro ao criar contato' });
+    }
+  }
+});
+
+app.put('/contacts/:id', async (req, res) => {
   const { id } = req.params;
-  const index = contacts.findIndex((contact) => contact.id === id);
-  if (index !== -1) {
-    contacts.splice(index, 1);
-    res.status(204).send();
-  } else {
-    res.status(404).send('Contato não encontrado');
+  const { name, email, phoneNumber } = req.body;
+
+  try {
+    const updatedContact = await Contact.findOneAndUpdate(
+      { id },
+      { name, email, phoneNumber },
+      { new: true }
+    );
+
+    if (updatedContact) {
+      res.json(updatedContact);
+    } else {
+      res.status(404).send('Contato não encontrado');
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao atualizar contato' });
+  }
+});
+
+app.delete('/contacts/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedContact = await Contact.findOneAndDelete({ id });
+    
+    if (deletedContact) {
+      res.status(204).send();
+    } else {
+      res.status(404).send('Contato não encontrado');
+    }
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao deletar contato' });
   }
 });
 

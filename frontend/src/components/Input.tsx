@@ -14,7 +14,7 @@ const Input = ({ onChange, value, label, placeholder, type }: IInputProps) => {
 
   return (
     <div className="w-full mt-4 relative">
-      <p className="text-white pl-[13px] font-bold text-lg">{label}</p>
+      <p className="text-white pl-[13px] font-medium text-lg">{label}</p>
       <input
         className="w-full h-[50px] text-lg rounded-xl focus:outline-none py-[20px] px-[13px] shadow-md shadow-[#00000020]"
         placeholder={placeholder}
@@ -25,12 +25,12 @@ const Input = ({ onChange, value, label, placeholder, type }: IInputProps) => {
       {type === 'password' ? (
         inputType === 'password' ? (
           <FaRegEyeSlash
-            className="w-8 h-8 absolute right-2 bottom-2"
+            className="w-6 h-6 absolute right-2 bottom-2 text-gray-500"
             onClick={() => setInputType('text')}
           />
         ) : (
           <FaRegEye
-            className="w-8 h-8 absolute right-2 bottom-2"
+            className="w-6 h-6 absolute right-2 bottom-2 text-gray-500"
             onClick={() => setInputType('password')}
           />
         )

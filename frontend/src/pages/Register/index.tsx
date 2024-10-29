@@ -17,9 +17,8 @@ const Register = () => {
   const { name, personNumber, phoneNumber, password, confirmPassword } = newUser;
 
   return (
-    <div className="w-screen h-screen flex justify-center items-center">
-      <Header />
-      <main className="w-[580px] h-[540px] m-4 flex flex-col items-center bg-green-500 rounded-2xl px-10 py-4 shadow-md shadow-[#00000050] mt-24">
+    <div className="w-screen h-screen flex justify-center items-center bg-green-950">
+      <main className="w-[600px] h-[600px] m-4 flex flex-col items-center justify-around bg-green-600 rounded-2xl px-10 py-4 shadow-md shadow-[#00000050] mt-24">
         <Input label="Nome" placeholder="Digite seu nome" value={name} onChange={handleNewName} />
 
         <div className="flex justify-between w-full gap-3">

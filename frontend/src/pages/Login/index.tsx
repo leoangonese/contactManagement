@@ -9,7 +9,7 @@ const Login = () => {
   const { name, password } = credentials;
 
   return (
-    <div className="w-screen h-screen flex justify-center items-center">
+    <div className="w-screen h-screen flex justify-center items-center bg-green-950">
       <main className="w-[580px] h-[540px] m-4 flex flex-col items-center bg-green-500 rounded-2xl p-10 shadow-md shadow-[#00000050]">
         <Logo size="lg" />
 
