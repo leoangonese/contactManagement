@@ -6,11 +6,11 @@ interface IInputProps {
   onChange: (value: string) => void;
   label: string;
   placeholder: string;
-  type?: 'password' | 'text';
+  type?: 'password' | 'text' | 'email';
 }
 
 const Input = ({ onChange, value, label, placeholder, type }: IInputProps) => {
-  const [inputType, setInputType] = useState<'password' | 'text'>(type ? type : 'text');
+  const [inputType, setInputType] = useState<'password' | 'text' | 'email'>(type ? type : 'text');
 
   return (
     <div className="w-full mt-4 relative">

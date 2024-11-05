@@ -3,6 +3,8 @@ import Header from '../../components/Header';
 import Input from '../../components/Input';
 import DirectionalText from '../Login/DirectionalText';
 import useRegister from './userRegister';
+import { registerUser } from '../../api/auth';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
   const {
@@ -10,11 +12,24 @@ const Register = () => {
     handleNewName,
     handleNewPersonNumber,
     handleNewPhoneNumber,
+    handleNewEmail,
     handleNewPassword,
     handleNewConfirmPassword,
     login,
   } = useRegister();
-  const { name, personNumber, phoneNumber, password, confirmPassword } = newUser;
+  const navigate = useNavigate();
+  const { name, personNumber, phoneNumber, email, password, confirmPassword } = newUser;
+
+
+  const handleRegister = async () => {
+    try {
+      const response = await registerUser(name, personNumber, phoneNumber, email, password, confirmPassword);
+      console.log('Registro bem-sucedido:', response.message);
+      navigate('/login');
+    } catch (error) {
+      console.log("erro>>", error)
+    }
+  };
 
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-green-950">
@@ -35,6 +50,13 @@ const Register = () => {
             onChange={handleNewPhoneNumber}
           />
         </div>
+        <Input
+          label="E-mail"
+          placeholder="Digite seu E-mail"
+          value={email}
+          onChange={handleNewEmail}
+          type="email"
+        />
 
         <Input
           label="Senha"
@@ -51,7 +73,7 @@ const Register = () => {
           type="password"
         />
 
-        <Button className="mt-10" onClick={() => login()}>
+        <Button className="mt-10" onClick={() => handleRegister()}>
           Cadastrar
         </Button>
 

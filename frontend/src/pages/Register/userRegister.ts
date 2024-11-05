@@ -12,6 +12,7 @@ const useRegister = () => {
     name: '',
     personNumber: '',
     phoneNumber: '',
+    email: '',
     password: '',
     confirmPassword: '',
   });
@@ -26,7 +27,6 @@ const useRegister = () => {
       console.log('campos vazios');
     }
 
-    // fazer login
   };
 
   const handleNewName = (value: string) => {
@@ -39,6 +39,10 @@ const useRegister = () => {
 
   const handleNewPhoneNumber = (value: string) => {
     setNewUser({ ...newUser, phoneNumber: value });
+  };
+
+  const handleNewEmail = (value: string) => {
+    setNewUser({ ...newUser, email: value.trimStart() });
   };
 
   const handleNewPassword = (value: string) => {
@@ -54,6 +58,7 @@ const useRegister = () => {
     handleNewName,
     handleNewPersonNumber,
     handleNewPhoneNumber,
+    handleNewEmail,
     handleNewPassword,
     handleNewConfirmPassword,
     login,

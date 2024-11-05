@@ -2,19 +2,19 @@ import { useState } from 'react';
 
 const useLogin = () => {
   const [credentials, setCredentials] = useState({
-    name: '',
+    cpf: '',
     password: '',
   });
 
-  const changeName = (value: string) => {
-    setCredentials({ ...credentials, name: value.trimStart() });
+  const changeCpf= (value: string) => {
+    setCredentials({ ...credentials, cpf: value.trimStart() });
   };
 
   const changePassword = (value: string) => {
     setCredentials({ ...credentials, password: value.trimStart() });
   };
 
-  return { credentials, changeName, changePassword };
+  return { credentials, changeCpf, changePassword };
 };
 
 export default useLogin;
